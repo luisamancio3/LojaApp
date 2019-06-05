@@ -24,8 +24,8 @@ const IndexPage = () => {
 
     Axios.post(API_URL, itensBody)
       .then(res => {
-        console.log(res);
-        
+        console.log(res)
+
         setitens(res.data.data.item)
       })
       .catch(err => {
@@ -33,22 +33,33 @@ const IndexPage = () => {
       })
   }, [])
 
-  const addToCart = row => {
+  const addToCart = (row, event) => {
+    event.preventDefault()
     const mutationAddItemToCarrinho = {
-      query:
-      `
+      query: `
       mutation{
-        
+        addItemToCarrinho(itemId: "${row._id}"){
+          itens{
+            nome
+          }
+        }
       }
-      `
+      `,
     }
-    
+
+    Axios.post(API_URL, mutationAddItemToCarrinho)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => console.log(err))
   }
 
   return (
     <Layout>
       <SEO title="Home" />
-      {itens && <ItensList itens={itens} isAdmin={false} selection={addToCart}/>}
+      {itens && (
+        <ItensList itens={itens} isAdmin={false} selection={addToCart} />
+      )}
     </Layout>
   )
 }

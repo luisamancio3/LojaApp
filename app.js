@@ -41,10 +41,6 @@ app.use(
             itens: [Item!]
         }
 
-        type GetCarrinho{
-          itens: [String!]
-        }
-
         input ItemInput{
             nome: String!
             descricao: String!
@@ -59,7 +55,7 @@ app.use(
 
          type RootQuery{
             item: [Item]!
-            carrinho: GetCarrinho
+            carrinho: [Item!]
          }
 
          type RootMutation{
@@ -91,21 +87,22 @@ app.use(
       carrinho: () => {
         return Carrinho.find()
           .then(res => {
-            console.log(res[0].itens);
-            
-            return res[0].itens
+            let itemsId = res[0].itens;
+            return Item.find({
+              '_id': { $in: itemsId } 
+            }).then( items => {
+              return itemsId.map( _id => items.filter( e => e._id+'' == _id+'')[0] );
+            });
           })
           .catch(err => {
-             console.log(err);
-             
+            console.log(err);
+            return err;
           });
       },
       login: ({email, password}) => {
         return true;
       },
       updateItem: args => {
-        console.log(args.item, args.id);
-
         return Item.findByIdAndUpdate(args.id, args.item)
           .then(() => {
             return Item.find();
@@ -130,8 +127,12 @@ app.use(
           });
       },
       itemByID: args => {
-        return Item.findById(args.itemId.itemId)
-          .then()
+        console.log(args);
+
+        return Item.findById(args.itemId)
+          .then(res => {
+            return res;
+          })
           .catch(err => {
             throw err;
           });
@@ -187,3 +188,8 @@ mongoose
   .catch(err => {
     console.log(err);
   });
+
+
+
+
+  

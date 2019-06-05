@@ -26,25 +26,15 @@ const ItensList = props => {
         field: "descricao",
         editable: props.isAdmin ? "always" : "never",
       },
-      {
-        title: "Adicionar ao carrihno",
-        field: "adicionarCarrinho",
-        editable: props.isAdmin ? "never" : "always",
-      },
     ],
     data: props.itens,
-  });
-  
+  })
 
   return (
     <MaterialTable
       title="Sri Lanka imports"
       columns={state.columns}
       data={state.data}
-      options={!props.isAdmin ? {
-        selection: true
-      }: {}}
-      onSelectionChange={(row) => props.selection(row)}
       editable={
         props.isAdmin
           ? {
@@ -72,6 +62,13 @@ const ItensList = props => {
             }
           : {}
       }
+      actions={!props.isAdmin ? [
+        {
+          icon: 'save',
+          tooltip: 'Save User',
+          onClick: (event, rowData) => props.selection(rowData, event)
+        }
+      ]: []}
     />
   )
 }
