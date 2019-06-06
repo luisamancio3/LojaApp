@@ -1,7 +1,0 @@
-{
-  "env": {
-      "MONGO_USER": "luis",
-      "MONGO_PASSWORD": "qwerty123*",
-      "MONGO_DB": "SriLanka"
-  }   
-}
